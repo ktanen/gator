@@ -9,7 +9,8 @@
     "moduleResolution": "Node",
     "ignoreDeprecations": "6.0",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"]
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["node_modules"]
