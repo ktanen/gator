@@ -1,4 +1,3 @@
-import { readConfig } from "./config.js";
 import { CommandsRegistry, registerCommand, runCommand } from "./commands/commands.js";
 import process from "node:process";
 import { handlerLogin } from "./commands/users.js";
