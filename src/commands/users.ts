@@ -2,6 +2,7 @@ import { setUser } from "../config.js";
 import { createUser, getUser, deleteUsers, getUsers } from "../lib/db/queries/users.js";
 import { readConfig } from "../config.js";
 import { read } from "node:fs";
+import { fetchFeed } from "../lib/rss.js";
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
     if (args.length === 0) {
@@ -53,6 +54,10 @@ export async function handlerUsers(cmdName: string, ...args: string[]) {
             console.log(`* ${user.name}`);
         }
     }
+}
 
-
+export async function handlerAgg(cmdName: string, ...args: string[]) {
+    const url = "https://www.wagslane.dev/index.xml";
+    const feed = await fetchFeed(url);
+    console.log(JSON.stringify(feed, null, 2));
 }

@@ -1,6 +1,6 @@
 import { CommandsRegistry, registerCommand, runCommand } from "./commands/commands.js";
 import process from "node:process";
-import { handlerLogin, handlerRegister, handlerReset, handlerUsers } from "./commands/users.js";
+import { handlerLogin, handlerRegister, handlerReset, handlerUsers, handlerAgg } from "./commands/users.js";
 
 async function main() {
   const registry: CommandsRegistry = {};
@@ -9,6 +9,7 @@ async function main() {
   registerCommand(registry, "register", handlerRegister)
   registerCommand(registry, "reset", handlerReset)
   registerCommand(registry, "users", handlerUsers);
+  registerCommand(registry, "agg", handlerAgg);
   
   const args = process.argv.slice(2);
 
