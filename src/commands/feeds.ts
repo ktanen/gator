@@ -40,7 +40,7 @@ function printFeed(feed: Feed, user: User) {
 
 export async function handlerListFeeds(cmdName: string, ...args: string[]) {
   
-  if (args.length > 0) {
+  if (args.length > 1) {
     throw new Error(`Usage: ${cmdName}`);
   }
 
