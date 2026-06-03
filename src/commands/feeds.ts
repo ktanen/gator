@@ -2,6 +2,7 @@ import { createFeed, getFeeds } from "../lib/db/queries/feeds.js";
 import { getUser, getUserByID } from "../lib/db/queries/users.js";
 import { readConfig } from "../config.js";
 import type { Feed, User } from "../lib/db/schema.js";
+import { createFeedFollow } from "../lib/db/queries/feedFollows.js";
 
 export async function handlerAddFeed(cmdName: string, ...args: string[]) {
     if (args.length < 2) {
@@ -28,6 +29,10 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]) {
 
    printFeed(feed, user);
 
+   const feedFollow = await createFeedFollow(userID, feed.id);
+
+   console.log(feedFollow.userName, feedFollow.feedName);
+
 }
 
 
@@ -40,7 +45,7 @@ function printFeed(feed: Feed, user: User) {
 
 export async function handlerListFeeds(cmdName: string, ...args: string[]) {
   
-  if (args.length > 1) {
+  if (args.length > 0) {
     throw new Error(`Usage: ${cmdName}`);
   }
 
