@@ -3,7 +3,7 @@ import process from "node:process";
 import { handlerLogin, handlerRegister, handlerReset, handlerUsers, handlerAgg } from "./commands/users.js";
 import { handlerAddFeed, handlerListFeeds } from "./commands/feeds.js";
 import { handlerFollow, handlerFollowing } from "./commands/feedFollows.js";
-
+import { middlewareLoggedIn } from "./middleware.js";
 async function main() {
   const registry: CommandsRegistry = {};
   
@@ -12,10 +12,10 @@ async function main() {
   registerCommand(registry, "reset", handlerReset)
   registerCommand(registry, "users", handlerUsers);
   registerCommand(registry, "agg", handlerAgg);
-  registerCommand(registry, "addfeed", handlerAddFeed);
+  registerCommand(registry, "addfeed", middlewareLoggedIn(handlerAddFeed));
   registerCommand(registry, "feeds", handlerListFeeds);
-  registerCommand(registry, "follow", handlerFollow);
-  registerCommand(registry, "following", handlerFollowing);
+  registerCommand(registry, "follow", middlewareLoggedIn(handlerFollow));
+  registerCommand(registry, "following", middlewareLoggedIn(handlerFollowing));
 
   const args = process.argv.slice(2);
 
