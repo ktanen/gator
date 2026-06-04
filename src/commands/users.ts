@@ -3,6 +3,8 @@ import { createUser, getUser, deleteUsers, getUsers } from "../lib/db/queries/us
 import { readConfig } from "../config.js";
 import { read } from "node:fs";
 import { fetchFeed } from "../lib/rss.js";
+import { toUSVString } from "node:util";
+import { scrapeFeeds } from "src/lib/db/queries/feeds.js";
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
     if (args.length === 0) {
@@ -56,8 +58,67 @@ export async function handlerUsers(cmdName: string, ...args: string[]) {
     }
 }
 
+function handleError(err: unknown) {
+  console.error(err);
+}
+
 export async function handlerAgg(cmdName: string, ...args: string[]) {
-    const url = "https://www.wagslane.dev/index.xml";
-    const feed = await fetchFeed(url);
-    console.log(JSON.stringify(feed, null, 2));
+
+    if (args.length !== 1) {
+        throw new Error(`Usage: ${cmdName} <time_between_reqs>`);
+    }
+
+    const timeBetweenRequests = args[0];
+    const regex = /^(\d+)(ms|s|m|h)$/;
+    const match = timeBetweenRequests.match(regex);
+
+    if (!match) {
+       throw new Error("Invalid duration. Use formats like 500ms, 1s, 1m, or 1h");
+    }
+
+    const amount = Number(match[1]);
+
+    if (Number.isNaN(amount)) {
+        throw new Error("Non-numeric duration amount.");
+    }
+
+    const unit = match[2];
+    let multiplier: number;
+    switch (unit) {
+        case "ms":
+            multiplier = 1;
+            break;
+        case "s":
+            multiplier = 1000;
+            break;
+        case "m":
+            multiplier = 60000;
+            break;
+        case "h":
+            multiplier = 3600000;
+            break;
+        default:
+            throw new Error("Invalid unit. Use ms, s, m, or h");
+    }
+
+    console.log(`Collecting feeds every ${timeBetweenRequests}`);
+
+    const milliseconds = amount * multiplier;
+
+    scrapeFeeds().catch(handleError);
+    console.log("");
+
+    const interval = setInterval(() => {
+    scrapeFeeds().catch(handleError);
+    }, milliseconds);
+    console.log("");
+    await new Promise<void>((resolve) => {
+    process.on("SIGINT", () => {
+        console.log("Shutting down feed aggregator...");
+        clearInterval(interval);
+        resolve();
+    });
+    });
+
+
 }
