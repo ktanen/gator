@@ -8,7 +8,7 @@ import { scrapeFeeds } from "src/lib/db/queries/feeds.js";
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
     if (args.length === 0) {
-        throw new Error("The login command expects a single username argument.");
+        throw new Error(`Usage: ${cmdName} <username>`);
     }
     const username = args[0];
 
@@ -22,7 +22,7 @@ export async function handlerLogin(cmdName: string, ...args: string[]) {
 
 export async function handlerRegister(cmdName: string, ...args: string[]) {
     if (args.length === 0) {
-        throw new Error("The register command expects a single username argument.");
+        throw new Error(`Usage: ${cmdName} <username>`);
     }
 
     const username = args[0];

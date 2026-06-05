@@ -1,7 +1,7 @@
 import { db } from "..";
 import { posts, feedFollows, feeds } from "../schema";
 import { eq, desc } from "drizzle-orm";
-import { User } from "../lib/db/schema.js";
+
 export async function createPost(title: string, url: string, feedID: string,
     description?: string, publishedAt?: Date | undefined) {
     const [result] = await db
