@@ -1,6 +1,7 @@
 # Gator
 
 ## Prerequisites:
+
     * Developed with Node 22.14.0 and PostgreSQL 16.14
     * A gatorConfig.json file in your home directory
         * This contains a single JSON object with the following fields:
@@ -8,14 +9,17 @@
             * "current_user_name": Set this to an empty string or null initially.
                 * The program will update this automatically when you run the login command.
 ## Setup:
+
     1. npm install
     2. npm run generate
     3. npm run migrate
-    
+
 ## Usage:
+
     Run "npm run start <command> [arguments]" from the root of the repo.
 
 ## Commands:
+
     * register <username>: register a user to the database
     * login <username>: switches the current user to the provided username, given that the name has been registered
     * reset: Clears the database
