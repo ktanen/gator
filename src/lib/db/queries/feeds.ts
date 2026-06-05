@@ -3,6 +3,7 @@ import { db } from "..";
 import { feeds } from "../schema";
 import { eq, sql } from "drizzle-orm";
 import {fetchFeed} from "../../../lib/rss.js"
+import { createPost } from "./posts.js";
 
 export async function createFeed(name: string, url: string, userID: string) {
     const [result] = await db
@@ -54,7 +55,20 @@ export async function scrapeFeeds() {
     await markFeedFetched(feedID);
 
     for (let item of feed.channel.item) {
-        console.log(item.title);
+        const title = item.title;
+        const url = item.link;
+        const description = item.description ? item.description : undefined;
+        const pubDate = item.pubDate;
+        const date = new Date(pubDate);
+        const publishedAt = isNaN(date.getTime()) ? undefined: date;
+
+        try {
+            await createPost(title, url, feedID, description, publishedAt);
+        } catch (error) {
+            //Skip this post
+        }
+
+
     }
 
 }
